@@ -46,9 +46,9 @@ HANDLE open_serial_port(const char* device, uint32_t baud_rate)
     // Configure read and write operations to time out after 100 ms.
     COMMTIMEOUTS timeouts = { 0 };
     timeouts.ReadIntervalTimeout = 0;
-    timeouts.ReadTotalTimeoutConstant = 100;
+    timeouts.ReadTotalTimeoutConstant = 1000;
     timeouts.ReadTotalTimeoutMultiplier = 0;
-    timeouts.WriteTotalTimeoutConstant = 100;
+    timeouts.WriteTotalTimeoutConstant = 2000;
     timeouts.WriteTotalTimeoutMultiplier = 0;
 
     success = SetCommTimeouts(port, &timeouts);

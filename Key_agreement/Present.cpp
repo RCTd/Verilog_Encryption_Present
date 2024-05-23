@@ -202,11 +202,13 @@ void decript(uint32_t* text, uint32_t* key)
 void test_Present()
 {
     uint32_t text[2];
+    set_zero(text, 2);
+    
     uint32_t key[3];
     set_zero(key,3);
+
     uint32_t key2[3];
     set_zero(key2,3);
-    set_zero(text,2);
 
     for (int i = 0; i < 5; i++) {
         printf("Encript\n");
@@ -216,7 +218,7 @@ void test_Present()
         print(text,2);
         printf("key\n");
         print(key2,3);
-
+        //....................
         printf("Decript\n");
         decript(text, key);
 

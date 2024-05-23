@@ -10,6 +10,30 @@ void set_rand(uint32_t* a, uint8_t size)
     for (int i = 0; i < size / 2; i++) { a[i] = (uint32_t)rand(); }
 }
 
+void swap_8(uint8_t* a, uint8_t size)
+{
+    uint8_t aux;
+    for (int i = 0; i < size/2; i++) {
+        aux = a[i];
+        a[i] = a[size - 1 - i];
+        a[size - 1 - i] = aux;
+    }
+}
+
+void swap_32(uint32_t* a, uint8_t size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        swap_8((uint8_t*)(a + i), 4);
+    }
+    uint32_t aux;
+    for (int i = 0; i < size / 2; i++) {
+        aux = a[i];
+        a[i] = a[size - 1 - i];
+        a[size - 1 - i] = aux;
+    }
+}
+
 void print(uint32_t* a, uint8_t size)
 {
     //printf("%s\r\n", str);
@@ -17,6 +41,35 @@ void print(uint32_t* a, uint8_t size)
         printf("%08X", a[i]);
     }
     printf("\r\n");
+}
+
+void printch(uint32_t* a, uint8_t size)
+{
+    for (int i = size - 1; i >= 0; i--) {
+        for (int j = sizeof(uint32_t) - 1; j >= 0; j--)
+        {
+            printf("%c", (char)((a[i] & (0xff << (j * 8))) >> (j * 8)));
+        }
+    }
+    //printf("\r\n");
+}
+
+void printc(uint32_t* a, uint8_t size)
+{
+    char buff[99];
+    int j = 0;
+    for (int i = 0; i < size; i++)
+        //for (int i = size-1; i >=0; i--)
+    {
+        //for (int k = 4 - 1; k >= 0; k--)
+        for (int k = 0; k < 4; k++)
+        {
+            buff[j] = a[i]>>k*8;
+            j++;
+        }
+    }
+    buff[j] = '\n';
+    printf("%s", buff);
 }
 
 uint32_t less(uint32_t* a, uint32_t* b, uint8_t size)
@@ -219,7 +272,7 @@ void set_key(HANDLE port,uint32_t *k)
     uint8_t buff[99];
 
     buff[0] = 'K';
-    while (write_port(port, buff, 1));
+    while (write_port(port, buff, 1)) printf("\nsend k");
 
     int i = 0;
     while (i < 29) //A
@@ -229,8 +282,9 @@ void set_key(HANDLE port,uint32_t *k)
     buff[i] = '\0';
     printf("\n%s", buff);
 
+    swap_32(g, 3);
     write_port(port, (uint8_t*)g, 24);
-    print(g, size/2);
+    swap_32(g,3);    
 
     i = 0;
     while (buff[i] != 'A') i++;
@@ -250,23 +304,13 @@ void set_key(HANDLE port,uint32_t *k)
     printf("k:\n");
     print(g, size/2);
 
-    i = 0;
-    while (i < 29)
-    {
-        i += read_port(port, buff + i, 1);
-    }
-    buff[i] = '\0';
-    printf("%s", buff);
-
-    /*while (1)
-    {
-        i=read_port(port, buff, 1);
-        if (buff[0] != 0 && i>0)
-        {
-            buff[1] = '\0';
-            printf("%s", buff);
-        }
-    }*/
+    //i = 0;
+    //while (i < 29) //K
+    //{
+    //    i += read_port(port, buff + i, 1);
+    //}
+    //buff[i] = '\0';
+    //printf("\n%s", buff);
 
     cpy(k, g, size);
 }

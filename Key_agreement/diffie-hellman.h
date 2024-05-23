@@ -12,6 +12,8 @@
 void set_zero(uint32_t* a, uint8_t size);
 void set_rand(uint32_t* a, uint8_t size);
 void print(uint32_t* a, uint8_t size);
+void printc(uint32_t* a, uint8_t size);
+void printch(uint32_t* a, uint8_t size);
 uint32_t less(uint32_t* a, uint32_t* b, uint8_t size);
 void op_minus(uint32_t* a, uint32_t* b, uint8_t size);
 void op_plus(uint32_t* a, uint32_t* b, uint8_t size);
